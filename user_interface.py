@@ -1,22 +1,24 @@
-
 import streamlit as st
+import time
+
+###import funktion für Musikerkennung
 
 # Haupttitel der Seite
 st.title('RhythmRadar')
 
-# Startseite
-st.header('Willkommen bei RhythmRadar')
-st.write('Drücke den Button unten, um mit der Musikerkennung zu starten.')
+# Menüauswahl
+menu = st.sidebar.radio("Menü", ('Musikerkennung', 'Meine erkannten Songs', 'Bibliothek', 'Bibliothek erweitern'))
 
-# Wenn der Button gedrückt wird
-if st.button('Musik erkennen'):
-    ### Hier Funktion zur SmallDickEnergy Musikerkennung aufrufen
-    
-    with st.spinner('Höre zu und erkenne...'):
-        #Nur zum probieren wenn fertig entfernen von hier
-        import time
-        time.sleep(5)  # Simulierte Wartezeit
-        # bis hier
+if menu == 'Musikerkennung':
+    # Musikerkennung
+    st.header('Musikerkennung')
+    st.write('Drücke den Button unten, um mit der Musikerkennung zu starten.')
+    if st.button('Musik erkennen'):
+        with st.spinner('Höre zu und erkenne...'):
+            ### Hier Musikerkennungsfunktion 
+            ###Nur zum probieren wenn fertig entfernen von hier
+            time.sleep(5)  # Simulierte Wartezeit
+            ###bis hier
         # Wenn erolgreich
         erkennungserfolg = True
         if erkennungserfolg:
@@ -26,9 +28,23 @@ if st.button('Musik erkennen'):
             
         else:
             st.error('Keine Musik erkannt. Bitte versuche es erneut.')
+elif menu == 'Meine erkannten Songs':
+    # Erkannte Songs
+    st.header('Meine erkannten Songs')
+    st.write('Liste der erkannten Songs...')
+    ### Hier Datenbank von Verlauf
 
-# Erkannte Songs 
-st.sidebar.title('Meine erkannten Songs')
-## Hier eine Datenbank der erkannten Musik erstellen
-st.write('- Beispiel-Song von Beispiel-Künstler')
+elif menu == 'Bibliothek':
+    # Bibliothek
+    st.header('Bibliothek')
+    # Hier könntest du die Logik einfügen, um die Bibliothek anzuzeigen
+    st.write('Anzeige der Musikbibliothek...')
+
+elif menu == 'Bibliothek erweitern':
+    # Bibliothek erweitern
+    st.header('Bibliothek erweitern')
+    uploaded_file = st.file_uploader("Wähle eine Datei aus")
+    if uploaded_file is not None:
+        # Hier würde die Logik zum Verarbeiten der hochgeladenen Datei hinzugefügt
+        st.write("Datei erfolgreich hochgeladen.")
 
