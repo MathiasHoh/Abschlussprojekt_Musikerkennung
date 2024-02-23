@@ -1,5 +1,4 @@
 
-
 import streamlit as st
 
 # Haupttitel der Seite
@@ -14,9 +13,10 @@ if st.button('Musik erkennen'):
     ### Hier Funktion zur SmallDickEnergy Musikerkennung aufrufen
     
     with st.spinner('Höre zu und erkenne...'):
-    
-        
-        
+        #Nur zum probieren wenn fertig entfernen von hier
+        import time
+        time.sleep(5)  # Simulierte Wartezeit
+        # bis hier
         # Wenn erolgreich
         erkennungserfolg = True
         if erkennungserfolg:
@@ -28,7 +28,7 @@ if st.button('Musik erkennen'):
             st.error('Keine Musik erkannt. Bitte versuche es erneut.')
 
 # Erkannte Songs 
-st.header('Meine erkannten Songs')
+st.sidebar.title('Meine erkannten Songs')
 ## Hier eine Datenbank der erkannten Musik erstellen
-
+st.write('- Beispiel-Song von Beispiel-Künstler')
 
