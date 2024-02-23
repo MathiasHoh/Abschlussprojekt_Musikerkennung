@@ -28,6 +28,23 @@ if menu == 'Musikerkennung':
             
         else:
             st.error('Keine Musik erkannt. Bitte versuche es erneut.')
+    st.write("Oder lade eine Musikdatei hoch, um sie zu erkennen.")
+    
+    # Datei-Uploader für Musikerkennung
+    uploaded_file = st.file_uploader("Ziehe eine Datei hierher oder klicke, um eine Datei auszuwählen", type=['mp3', 'wav'])
+    if uploaded_file is not None:
+        with st.spinner('Erkenne Musik aus Datei...'):
+            ### Hier Musikerkennungsfunktion mit `uploaded_file`
+            
+        # Wenn erfolgreich
+            erkennungserfolg = True
+        if erkennungserfolg:
+            st.success('Dateierkennung erfolgreich!')
+            st.write('') ### Hier Künstler oder Titel aus der Datei
+            st.write('') ##  Hier Titel oder Künstler aus der Datei
+            
+        else:
+            st.error('Keine Musik aus Datei erkannt. Bitte versuche es erneut oder wähle eine andere Datei.')            
 elif menu == 'Meine erkannten Songs':
     # Erkannte Songs
     st.header('Meine erkannten Songs')
@@ -37,14 +54,12 @@ elif menu == 'Meine erkannten Songs':
 elif menu == 'Bibliothek':
     # Bibliothek
     st.header('Bibliothek')
-    # Hier könntest du die Logik einfügen, um die Bibliothek anzuzeigen
     st.write('Anzeige der Musikbibliothek...')
-
+    ### Hier Datenbank der Bibliothek
 elif menu == 'Bibliothek erweitern':
     # Bibliothek erweitern
     st.header('Bibliothek erweitern')
     uploaded_file = st.file_uploader("Wähle eine Datei aus")
     if uploaded_file is not None:
-        # Hier würde die Logik zum Verarbeiten der hochgeladenen Datei hinzugefügt
+        ### Hier funktion zum hinzufügen zur Datenbank
         st.write("Datei erfolgreich hochgeladen.")
-
