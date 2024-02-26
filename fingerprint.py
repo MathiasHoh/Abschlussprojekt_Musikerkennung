@@ -42,9 +42,9 @@ class Fingerprint():
     def __find_peaks(self, Sxx: np_types.NDArray) -> np_types.NDArray:
         """Finds peaks in a spectrogram.
 
-        Uses :data:`~abracadabra.constants.PEAK_BOX_SIZE` as the size of the region around each
+        Uses :data:`constants.PEAK_BOX_SIZE` as the size of the region around each
         peak. Calculates number of peaks to return based on how many peaks could theoretically
-        fit in the spectrogram and the :data:`~abracadabra.constants.POINT_EFFICIENCY`.
+        fit in the spectrogram and the :data:`constants.POINT_EFFICIENCY`.
 
         Inspired by
         `photutils
