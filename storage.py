@@ -8,7 +8,7 @@ class SongDatabase:
     def __init__(self, db_path):
         self.db = TinyDB(db_path, storage=MemoryStorage())
 
-    def _contains_(self, filename):
+    def __contains__(self, filename):
         """Überprüft, ob ein Pfad bereits in der Datenbank registriert wurde."""
         Song = Query()
         return self.db.contains(Song.song_id == self._get_song_id(filename))
