@@ -10,7 +10,7 @@ Damit das Programm funktioniert, müssen alle packages aus dem "requirements.txt
 
 # Wie funktioniert das Programm ? 
 
-In unserem Programm haben wir uns vorallem an Abracadabra orientiert und versucht es so ähnlich wie möglich umzusetzen.
+Wir haben Streamlit als Basis für unser "App" und fürs Interface benutzt. 
 
 Anfangs werden Songs eingespielt und das Audio vone jedem Song in kleine Zeitabschnitte gegliedert. Anschließend wird jeder kleine Teilabschnitt des Songs von der "time domain" mithilfe einer fourier Transformation in die "frequency domain" umgewandelt um die enthaltenen Frequenzen zu analysieren. So wird ein Spektogram erstellt, welches die Amplituden der verschiedenen Frequenzen über die Zeit darstellt.
 
@@ -20,3 +20,9 @@ Anschließend wird "Hashing" gemacht, was uns erlaubt die fingerprints in einem 
 
 Wenn es genügen Übereinstimmungen zwischen den gehashten fingerprints von einem Song in der Datenbank mit jenen vom Song, welcher gerade eingespielt wurde gibt, gibt das Programm den Songtitel, den Interpreter und das Album wieder.$$$$$$$$$$$$
 
+# Quellen 
+Orientierung am vorherigen Projekt "Case Study"
+https://www.ee.columbia.edu/~dpwe/papers/Wang03-shazam.pdf
+https://www.cameronmacleod.com/blog/how-does-shazam-work
+https://willdrevo.com/fingerprinting-and-audio-recognition-with-python/
+https://learningtofly.dev/blog/streamlit-class-based-app
