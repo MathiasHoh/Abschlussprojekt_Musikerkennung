@@ -46,7 +46,6 @@ class RhythmRadarApp:
     def __init__(self, api_key):
         self.api_key = api_key
         st.title('RhythmRadar')
-        UserManagement()
         self.menu = st.sidebar.radio("Menü", ('Musikerkennung', 'Meine erkannten Songs', 'Bibliothek', 'YouTube-Charts', 'Bibliothek erweitern'))
         self.handle_menu()
 
