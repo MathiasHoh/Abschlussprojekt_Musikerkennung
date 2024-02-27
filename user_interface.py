@@ -11,10 +11,20 @@ class MusicRecognition:
         st.header('Musikerkennung')
         if st.button('Musik erkennen'):
             # Zeige das GIF und führe Musikerkennung durch
+            placeholder = st.empty()
+            placeholder.markdown("![Erkennung läuft](https://i.gifer.com/8IL.gif)")
+           
             with st.spinner('Höre zu und erkenne...'):
                 time.sleep(5)  # Simulierte Wartezeit
-            st.success('Erkennung erfolgreich!')
-        
+            placeholder.empty()
+            #erkennungserfolg=False
+            if erkennungserfolg:
+            
+                st.success('Erkennung erfolgreich!')
+                st.markdown("![Noice](https://i.gifer.com/Eh2.gif)")
+            else:
+                st.error('Kein Erfolg. Bitte versuch es nochmal')
+                st.markdown("![Oh No!](https://i.gifer.com/20F5.gif)")
         st.write("Oder lade eine Musikdatei hoch, um sie zu erkennen.")
         uploaded_file = st.file_uploader("Ziehe eine Datei hierher oder klicke um eine Datei auszuwählen", type=['mp3', 'wav'])
         if uploaded_file is not None:
