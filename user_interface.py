@@ -90,35 +90,6 @@ class MusicRecognition:
         return path
 
 
-# Klasse für YouTube-Charts
-class YouTubeCharts:
-    def __init__(self, api_key):
-        self.api_key = api_key
-        self.show_youtube_charts()
-
-    def get_youtube_charts(self):
-        youtube = build('youtube', 'v3', developerKey=self.api_key)
-        request = youtube.videos().list(
-            part="snippet,contentDetails,statistics",
-            chart="mostPopular",
-            regionCode="DE",
-            videoCategoryId="10",
-            maxResults=10
-        )
-        response = request.execute()
-        return response
-
-    def show_youtube_charts(self):
-        st.header('YouTube Top Musikvideos')
-        charts_button = st.button('Lade YouTube Top Musikvideos')
-        if charts_button:
-            with st.spinner('Lade YouTube Top Musikvideos...'):
-                charts = self.get_youtube_charts()
-                for video in charts.get('items', []):
-                    video_title = video['snippet']['title']
-                    video_url = f"https://www.youtube.com/watch?v={video['id']}"
-                    st.markdown(f"[{video_title}]({video_url})")
-
 class LibraryExtension:
     def __init__(self, recogniser: Recogniser):
         self.recogniser = recogniser
@@ -135,6 +106,12 @@ class LibraryExtension:
 
     def show_library_extension(self):
         st.header('Bibliothek erweitern')
+
+                # Eingabefelder für Interpret, Titel und Album
+        interpret = st.text_input("Interpret", key="interpret_input")
+        title = st.text_input("Titel", key="title_input")
+        album = st.text_input("Album", key="album_input")
+
         uploaded_files = st.file_uploader("Ziehe Dateien hierher oder klicke, um Dateien auszuwählen", accept_multiple_files=True, type=['mp3', 'wav'], key="library_extension")
 
         with st.spinner('Lade Neues Lied in die Datenbank'):
@@ -164,18 +141,15 @@ class RecognisedSongs:
 
 # Hauptklasse der Anwendung
 class RhythmRadarApp:
-    def __init__(self, api_key):
+    def __init__(self):
         self.recogniser = Recogniser()
-        self.api_key = api_key
         st.title('RhythmRadar')
-        self.menu = st.sidebar.radio("Menü", ('Musikerkennung', 'Meine erkannten Songs', 'Bibliothek', 'YouTube-Charts', 'Bibliothek erweitern'))
+        self.menu = st.sidebar.radio("Menü", ('Musikerkennung', 'Meine erkannten Songs', 'Bibliothek erweitern'))
         self.handle_menu()
 
     def handle_menu(self):
         if self.menu == 'Musikerkennung':
             MusicRecognition(self.recogniser)
-        elif self.menu == 'YouTube-Charts':
-            YouTubeCharts(self.api_key)
         elif self.menu == 'Bibliothek erweitern':
             LibraryExtension(self.recogniser)
         elif self.menu == 'Meine erkannten Songs':
@@ -183,5 +157,4 @@ class RhythmRadarApp:
         # Implementiere hier weitere elif-Blöcke für andere Menüpunkte
 
 if __name__ == "__main__":
-    api_key = "AIzaSyBhALmgY9R3oeszHGvGKAGNjAGGBmMM6N8"
-    RhythmRadarApp(api_key)
+    RhythmRadarApp()
