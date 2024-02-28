@@ -1,32 +1,31 @@
 import typing
 import os
-import pyaudio
-import constants
-import numpy as np
 from multiprocessing import Pool, Lock
+
+import pyaudio
+import numpy as np
 from tinytag import TinyTag
-from .record import record_audio
-from .fingerprint import Fingerprint
-from .storage import store_song, get_matches, get_info_for_song_id, song_in_db, checkpoint_db
+
+import constants
+from fingerprint import Fingerprint
+from storage import SongDatabase
 
 
 KNOWN_EXTENSIONS = ["mp3", "wav", "flac", "m4a"]
-
-class Database:
-
-    def __contains__(self, filename):  # für den in operator
-        # prüfen, ob in datenbank
-        return False
-    
-    def store(self, hashes, info):
-        pass
 
 
 class Recogniser():
 
     def __init__(self):
         self.__matcher = Matcher()
-        self.__database = Database()
+        self.__database = SongDatabase(
+            os.path.join(
+                os.path.dirname(
+                    os.path.abspath(__file__)
+                ),
+                ".song-db"
+            )
+        )
 
     def __get_song_info(self, filename: str) -> typing.Tuple[str, str, str]:
         """Gets the ID3 tags for a file. Returns None for tuple values that don't exist.
@@ -53,11 +52,11 @@ class Recogniser():
         song_info = self.__get_song_info(fingerprint.name)
         try:
             with lock:
-                self.__database.store(fingerprint.hashes, song_info)
+                self.__database.store_song(fingerprint.hashes, song_info)
 
         except NameError:
             # running single-threaded, no lock needed
-            self.__database.store(fingerprint.hashes, song_info)
+            self.__database.store_song(fingerprint.hashes, song_info)
 
     def register_directory(self, path: str):
         """Recursively register songs in a directory.
@@ -87,11 +86,8 @@ class Recogniser():
         l = Lock()
         with Pool(constants.NUM_WORKERS, initializer=pool_init, initargs=(l,)) as p:
             p.map(self.register_song, to_register)
-
-        # speed up future reads
-        checkpoint_db()
     
-    def __recognise(self, fingerprint: Fingerprint) -> typing.Union[int, None]:  # TODO: Typing für Rückgabewerte aus der DB (info)
+    def __recognise(self, fingerprint: Fingerprint) -> typing.Union[tuple, str, None]:
         """TODO: docstring bearbeiten
 
         Args:
@@ -100,15 +96,15 @@ class Recogniser():
         Returns:
             typing.Union[int, None]: _description_
         """
-        matches = get_matches(fingerprint.hashes)
+        matches = self.__database.get_matches(fingerprint.hashes)
         matched_song = self.__matcher.match(matches)
-        info = get_info_for_song_id(matched_song)
+        info = self.__database.get_info_for_song_id(matched_song)
         if info is not None:
             return info
         
         return matched_song
 
-    def recognise_song(self, filename: str) -> typing.Union[int, None]:  # TODO: Typing für Rückgabewerte aus der DB (info)
+    def recognise_song(self, filename: str) -> typing.Union[tuple, str, None]:
         """Recognises a pre-recorded sample.
 
         Recognises the sample stored at the path ``filename``. The sample can be in any of the
@@ -121,18 +117,17 @@ class Recogniser():
         fingerprint = Fingerprint.from_file(filename)
         return self.__recognise(fingerprint)
 
-    def listen_to_song(self, filename=None) -> typing.Union[int, None]:  # TODO: Typing für Rückgabewerte aus der DB (info)
+    def listen_to_song(self) -> typing.Union[tuple, str, None]:
         """Recognises a song using the microphone.
 
         Optionally saves the sample recorded using the path provided for use in future tests.
         This function is good for one-off recognitions, to generate a full test suite, look
         into :func:`~abracadabra.record.gen_many_tests`.
 
-        :param filename: The path to store the recorded sample (optional)
         :returns: :func:`~abracadabra.recognise.get_song_info` result for matched song or None.
         :rtype: tuple(str, str, str)
         """
-        audio = self.__record(filename=filename)
+        audio = self.__record()
         fingerprint = Fingerprint(audio)
         return self.__recognise(fingerprint)
     
@@ -164,8 +159,6 @@ class Recogniser():
 
 class Matcher():
 
-    # TODO: typing
-
     def __init__(self, binwidth: float=0.5):
         """A class providing the scoring capabilities needed for finding the best match of a
         recognised song.
@@ -174,7 +167,7 @@ class Matcher():
         """
         self.binwidth: float = binwidth
 
-    def __score(self, offsets):
+    def __score(self, offsets: list) -> float:
         """Score a matched song.
 
         Calculates a histogram of the deltas between the time offsets of the hashes from the
@@ -197,7 +190,7 @@ class Matcher():
         
         return np.max(hist)
 
-    def match(self, matches):
+    def match(self, matches: typing.DefaultDict[str, list]) -> typing.Optional[str]:
         """For a dictionary of song_id: offsets, returns the best song_id.
 
         Scores each song in the matches dictionary and then returns the song_id with the best score.
