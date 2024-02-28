@@ -40,6 +40,9 @@ class MusicRecognition:
             if isinstance(info, tuple):
                 artist, album, title = info
                 recognised.append(info)
+            
+                spotify_link = f"https://open.spotify.com/search/{info[1][0].replace(' ', '')}+{info[1][1].replace(' ', '')}"
+                st.write("Spotify Link:", spotify_link)
                 st.success('Erkennung erfolgreich!')
                 st.markdown("![Noice](https://i.gifer.com/Eh2.gif)")
 
@@ -61,6 +64,9 @@ class MusicRecognition:
             if isinstance(info, tuple):
                 artist, album, title = info
                 recognised.append(info)
+
+                spotify_link = f"https://open.spotify.com/search/{info[1][0].replace(' ', '')}+{info[1][1].replace(' ', '')}"
+                st.write("Spotify Link:", spotify_link)
                 st.success('Erkennung erfolgreich!')
                 st.markdown("![Noice](https://i.gifer.com/Eh2.gif)")
 

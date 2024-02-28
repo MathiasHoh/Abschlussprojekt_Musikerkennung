@@ -1,7 +1,8 @@
 # Abschlussprojekt_Musikerkennung
 
 # Installation 
-Damit das Programm funktioniert, müssen alle packages aus dem "requirements.txt" file installiert werden und die ".py" files ausgeführt werden. Anschließend kann die website mit dem Befehl "streamlit run user_interface.py", welcher in einen Terminal gschrieben werden muss, geöffnet werden. 
+Damit das Programm funktioniert, müssen alle packages aus dem "requirements.txt" file installiert werden mit dem Befehl pip install -r requirements.txt
+Anschließend kann die website mit dem Befehl "streamlit run user_interface.py", welcher in einen Terminal gschrieben werden muss, geöffnet werden. 
 
 
 # Beschreibung der funktionalität des User interface
