@@ -1,10 +1,12 @@
 import uuid
-import constants
+
 import numpy as np
 import numpy.typing as np_types
 from pydub import AudioSegment
 from scipy.signal import spectrogram
 from scipy.ndimage import maximum_filter
+
+import constants
 
 
 class Fingerprint():
@@ -124,11 +126,3 @@ class Fingerprint():
             if point[1] < x_min or point[1] > x_max:
                 continue
             yield point
-
-
-if __name__ == "__main__":
-    # Beispiel
-    audio_file_name = "Test.mp3"
-    fp = Fingerprint.from_file(audio_file_name)
-    fp.hashes
-    fp.name
