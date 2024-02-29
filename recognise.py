@@ -37,8 +37,17 @@ class Recogniser():
         tag = TinyTag.get(filename)
         artist = tag.artist if tag.albumartist is None else tag.albumartist
         return (artist, tag.album, tag.title)
+    
+    def get_history(self):
+        return self.__database.get_history()
 
-    def register_song(self, filename: str):
+    def register_song(
+            self,
+            filename: str,
+            interpret: typing.Optional[str]=None,
+            album: typing.Optional[str]=None,
+            title: typing.Optional[str]=None
+        ):
         """Register a single song.
 
         Checks if the song is already registered based on path provided and ignores
@@ -49,7 +58,13 @@ class Recogniser():
             return
         
         fingerprint = Fingerprint.from_file(filename)
-        song_info = self.__get_song_info(fingerprint.name)
+        _interpret, _album, _title = self.__get_song_info(fingerprint.name)
+        song_info = (
+            interpret if interpret else _interpret,
+            album if album else _album,
+            title if title else _title
+        )
+
         try:
             with lock:
                 self.__database.store_song(fingerprint.hashes, song_info)
@@ -60,9 +75,6 @@ class Recogniser():
 
     def register_directory(self, path: str):
         """Recursively register songs in a directory.
-
-        Uses :data:`~abracadabra.settings.NUM_WORKERS` workers in a pool to register songs in a
-        directory.
 
         :param path: Path of directory to register
         """
@@ -88,16 +100,20 @@ class Recogniser():
             p.map(self.register_song, to_register)
     
     def __recognise(self, fingerprint: Fingerprint) -> typing.Union[tuple, str, None]:
-        """TODO: docstring bearbeiten
+        """Recognizes a song based on a fingerprint.
 
         Args:
-            fingerprint (Fingerprint): _description_
+            fingerprint (Fingerprint): The fingerprint of the song to be recognized.
 
         Returns:
-            typing.Union[int, None]: _description_
+            typing.Union[tuple, str, None]: A tuple containing the information about the recognized song (artist, album, title), 
+        the song ID if the song was recognized, or None if no match was found.
         """
         matches = self.__database.get_matches(fingerprint.hashes)
         matched_song = self.__matcher.match(matches)
+        if matched_song is not None:
+            self.__database.add_to_history(matched_song)
+
         info = self.__database.get_info_for_song_id(matched_song)
         if info is not None:
             return info
@@ -132,7 +148,7 @@ class Recogniser():
         return self.__recognise(fingerprint)
     
     def __record(self):
-        """ Record 10 seconds of audio
+        """ Record 5 seconds of audio
 
         :returns: The audio stream with parameters defined in this module.
         """

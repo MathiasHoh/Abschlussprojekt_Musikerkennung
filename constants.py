@@ -13,7 +13,7 @@ CHANNELS = 1
 RATE = 44100
 """The sample rate."""
 
-RECORD_SECONDS = 10
+RECORD_SECONDS = 5
 """Number of seconds to record."""
 
 SAMPLE_RATE = 44100

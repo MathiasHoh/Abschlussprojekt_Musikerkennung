@@ -1,13 +1,14 @@
 import uuid
 from tinydb import TinyDB, Query
-from tinydb.storages import MemoryStorage
 from collections import defaultdict
 
 
 class SongDatabase:
     def __init__(self, db_path):
         self.db = TinyDB(db_path)
-
+        self.hash_table = self.db.table("hashes")
+        self.info_table = self.db.table("info")
+        self.history_table = self.db.table("history")
 
 
     def __contains__(self, filename):
@@ -15,9 +16,20 @@ class SongDatabase:
         """Überprüft, ob ein Pfad bereits in der Datenbank registriert wurde."""
 
         Song = Query()
-        return self.db.contains(Song.song_id == self._get_song_id(filename))
+        return self.hash_table.contains(Song.song_id == self._get_song_id(filename))
     
 
+    def add_to_history(self, song_id):
+        self.history_table.insert({'song_id': song_id})
+
+
+    def get_history(self):
+        result = []
+        for entry in self.history_table.all():
+            data = self.info_table.get(Query().song_id == entry.get("song_id"))
+            result.append((data["artist"], data["album"], data["title"]))
+        
+        return result
 
 
     def store_song(self, hashes, song_info):
@@ -33,21 +45,21 @@ class SongDatabase:
 
         insert_info = [i if i is not None else "Unknown" for i in song_info]
         for h in hashes:
-            self.db.insert({'hash': h[0], 'offset': h[1], 'song_id': h[2], 'artist': insert_info[0], 'album': insert_info[1], 'title': insert_info[2]})
-        #self.db.insert({'artist': insert_info[0], 'album': insert_info[1], 'title': insert_info[2], 'song_id': hashes[0][2]})
+            self.hash_table.insert({'hash': h[0], 'offset': h[1], 'song_id': h[2]})
+        
+        self.info_table.insert({'artist': insert_info[0], 'album': insert_info[1], 'title': insert_info[2], 'song_id': h[2]})
 
 
 
 
-    def get_matches(self, hashes, threshold=5):
+    def get_matches(self, hashes):
 
         """Gibt übereinstimmende Songs für eine Reihe von Hashes zurück."""
 
         h_dict = {h[0]: h[1] for h in hashes}
-        #results = self.db.search(Query().hash.one_of(h[0] for h in hashes))
         results = list()
         for _h in hashes:
-            res = self.db.search(Query().hash == _h[0])
+            res = self.hash_table.search(Query().hash == _h[0])
             results.extend(res)
 
         result_dict = defaultdict(list)
@@ -63,8 +75,7 @@ class SongDatabase:
         """Sucht Songinformationen für eine gegebene ID."""
 
         Song = Query()
-        result = self.db.get(Song.song_id == song_id)
-        print(f"{result=}")
+        result = self.info_table.get(Song.song_id == song_id)
         if result is not None:
             return result['artist'], result['album'], result['title']
         
