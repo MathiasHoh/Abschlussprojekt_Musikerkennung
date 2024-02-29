@@ -27,11 +27,17 @@ Anschließend wird "Hashing" gemacht, was uns erlaubt, die Fingerprints in einem
 Wenn es genügend Übereinstimmungen zwischen den gehashten Fingerprints von einem Song in der Datenbank mit jenen vom Song, welcher gerade eingespielt wurde gibt, gibt das Programm den Songtitel, den Künstler und das Album wieder, sofern diese hinterlegt sind.
 
 # Erweiterungen
+
 Erweiterungen welche implementiert wurden sind:
+
 - Die Musikerkennung über das Mikrofon
 - Bei erkennung eines Songs die Möglichkeit diesen direkt über Spotify oder YouTube abzuspielen, dabei wird direkt der Titel sowie der Künstler in die Suchleiste der jeweiligen Platform übergeben und dieser so direkt gesucht. 
 - Es wurde ein Reiter "Erkannte Songs" erstellt welcher eine Liste der Songs wiedergibt, welche der Benutzer der Oberfläche bereits erkennen lassen hat.
 - GIFs werden abgespielt, während man auf die Song-erkennung wartet.
+
+# UML
+
+![UML-Diagramm](UML-Diagramm.png)
 
 # Quellen
 Orientierung am vorherigen Projekt "Case Study"
