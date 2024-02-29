@@ -1,9 +1,9 @@
-import time
 import os
 from io import BytesIO
+from urllib.parse import quote, quote_plus
 
 import streamlit as st
-from googleapiclient.discovery import build
+from pydub import AudioSegment
 
 from recognise import Recogniser
 
@@ -36,19 +36,16 @@ class MusicRecognition:
                 info = self.recogniser.listen_to_song()
 
             placeholder.empty()
-            #erkennungserfolg=False
             if isinstance(info, tuple):
                 artist, album, title = info
                 recognised.append(info)
             
-                spotify_link = f"https://open.spotify.com/search/{info[1][0].replace(' ', '')}+{info[1][1].replace(' ', '')}"
-                st.write("Spotify Link:", spotify_link)
+                spotify_link = f"https://open.spotify.com/search/{quote(f'{artist} {title}')}"
+                youtube_link = f"https://www.youtube.com/results?search_query={quote_plus(f'{artist} {title}')}"
                 st.success('Erkennung erfolgreich!')
-                st.markdown("![Noice](https://i.gifer.com/Eh2.gif)")
-
-                st.write(f"Interpret: {artist}") 
-                st.write(f"Interpret: {title}") 
-                st.write(f"Interpret: {album}")
+                st.write(f"{title} - {artist} ({album})")
+                st.link_button("Mit Spotify öffnen", spotify_link)
+                st.link_button("Mit Youtube öffnen", youtube_link)
 
             else:
                 st.error('Kein Erfolg. Bitte versuch es nochmal')
@@ -64,15 +61,13 @@ class MusicRecognition:
             if isinstance(info, tuple):
                 artist, album, title = info
                 recognised.append(info)
-
-                spotify_link = f"https://open.spotify.com/search/{info[1][0].replace(' ', '')}+{info[1][1].replace(' ', '')}"
-                st.write("Spotify Link:", spotify_link)
+            
+                spotify_link = f"https://open.spotify.com/search/{quote(f'{artist} {title}')}"
+                youtube_link = f"https://www.youtube.com/results?search_query={quote_plus(f'{artist} {title}')}"
                 st.success('Erkennung erfolgreich!')
-                st.markdown("![Noice](https://i.gifer.com/Eh2.gif)")
-
-                st.write(f"Interpret: {artist}") 
-                st.write(f"Interpret: {title}") 
-                st.write(f"Interpret: {album}") 
+                st.write(f"{title} - {artist} ({album})")
+                st.link_button("Mit Spotify öffnen", spotify_link)
+                st.link_button("Mit Youtube öffnen", youtube_link)
 
             else:
                 print(info)
@@ -112,15 +107,13 @@ class LibraryExtension:
         title = st.text_input("Titel", key="title_input")
         album = st.text_input("Album", key="album_input")
 
-        uploaded_files = st.file_uploader("Ziehe Dateien hierher oder klicke, um Dateien auszuwählen", accept_multiple_files=True, type=['mp3', 'wav'], key="library_extension")
+        uploaded_file = st.file_uploader("Ziehe Dateien hierher oder klicke, um Dateien auszuwählen", accept_multiple_files=False, type=['mp3', 'wav'], key="library_extension")
 
         with st.spinner('Lade Neues Lied in die Datenbank'):
-            if uploaded_files:
-                for uploaded_file in uploaded_files:
-                
-                    file_path = self.__save_fie(uploaded_file)
-                    self.recogniser.register_song(file_path)
-                    st.write(f"Datei {uploaded_file.name} erfolgreich hochgeladen.")
+            if uploaded_file:
+                file_path = self.__save_fie(uploaded_file)
+                self.recogniser.register_song(file_path, interpret=interpret, album=album, title=title)
+                st.write(f"Datei {uploaded_file.name} erfolgreich hochgeladen.")
     
     def __save_fie(self, uploaded_file: BytesIO):
         path = os.path.join(
@@ -134,8 +127,11 @@ class LibraryExtension:
 
 
 class RecognisedSongs:
-    def __init__(self) -> None:
-        st.header('Bibliothek erweitern')
+    def __init__(self, recogniser: Recogniser):
+
+        st.header('Meine erkannten Songs')
+        recognised = recogniser.get_history()
+        print(recognised)
         for artist, album, title in recognised:
             st.write(f"{title} - {artist} ({album})")
 
@@ -153,7 +149,7 @@ class RhythmRadarApp:
         elif self.menu == 'Bibliothek erweitern':
             LibraryExtension(self.recogniser)
         elif self.menu == 'Meine erkannten Songs':
-            RecognisedSongs()
+            RecognisedSongs(self.recogniser)
         # Implementiere hier weitere elif-Blöcke für andere Menüpunkte
 
 if __name__ == "__main__":
