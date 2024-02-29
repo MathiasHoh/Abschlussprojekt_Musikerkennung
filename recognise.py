@@ -127,7 +127,7 @@ class Recogniser():
         formats in :data:`recognise.KNOWN_FORMATS`.
 
         :param filename: Path of file to be recognised.
-        :returns: :func:`~abracadabra.recognise.get_song_info` result for matched song or None.
+        :returns: :func:`__get_song_info` result for matched song or None.
         :rtype: tuple(str, str, str)
         """
         fingerprint = Fingerprint.from_file(filename)
@@ -136,11 +136,7 @@ class Recogniser():
     def listen_to_song(self) -> typing.Union[tuple, str, None]:
         """Recognises a song using the microphone.
 
-        Optionally saves the sample recorded using the path provided for use in future tests.
-        This function is good for one-off recognitions, to generate a full test suite, look
-        into :func:`~abracadabra.record.gen_many_tests`.
-
-        :returns: :func:`~abracadabra.recognise.get_song_info` result for matched song or None.
+        :returns: :func:`__get_song_info` result for matched song or None.
         :rtype: tuple(str, str, str)
         """
         audio = self.__record()
@@ -212,7 +208,7 @@ class Matcher():
         Scores each song in the matches dictionary and then returns the song_id with the best score.
 
         :param matches: Dictionary of song_id to list of offset pairs (db_offset, sample_offset)
-        as returned by :func:`~abracadabra.Storage.storage.get_matches`.
+        as returned by :func:`get_matches`.
         :returns: song_id with the best score.
         :rtype: str
         """
