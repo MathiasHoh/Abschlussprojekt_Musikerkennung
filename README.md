@@ -34,6 +34,7 @@ Erweiterungen welche implementiert wurden sind:
 - Bei erkennung eines Songs die Möglichkeit diesen direkt über Spotify oder YouTube abzuspielen, dabei wird direkt der Titel sowie der Künstler in die Suchleiste der jeweiligen Platform übergeben und dieser so direkt gesucht. 
 - Es wurde ein Reiter "Erkannte Songs" erstellt welcher eine Liste der Songs wiedergibt, welche der Benutzer der Oberfläche bereits erkennen lassen hat.
 - GIFs werden abgespielt, während man auf die Song-Erkennung übers Mikrofon wartet und wenn ein Song nicht erkannt wurde.
+- Nachdem ein Song eingescannt wurde, wird unten ein Plot erstellt, welcher die Signalform wiedergibt. 
 
 # UML
 
