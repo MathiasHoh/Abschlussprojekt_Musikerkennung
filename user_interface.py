@@ -4,7 +4,7 @@ from urllib.parse import quote, quote_plus
 
 import streamlit as st
 
-from recognise import Recogniser, PlayAudio
+from recognise import Recogniser
 
 recognised = list()
 
@@ -60,7 +60,7 @@ class MusicRecognition:
             if isinstance(info, tuple):
                 artist, album, title = info
                 recognised.append(info)
-            
+
                 spotify_link = f"https://open.spotify.com/search/{quote(f'{artist} {title}')}"
                 youtube_link = f"https://www.youtube.com/results?search_query={quote_plus(f'{artist} {title}')}"
                 st.success('Erkennung erfolgreich!')
@@ -114,7 +114,8 @@ class LibraryExtension:
                 self.recogniser.register_song(file_path, interpret=interpret, album=album, title=title)
                 st.write(f"Datei {uploaded_file.name} erfolgreich hochgeladen.")   
 
-                PlayAudio.play_audio(uploaded_song)
+                audio_bytes = uploaded_file.getvalue()
+                st.audio(audio_bytes, format='audio/wav')
 
     def __save_fie(self, uploaded_file: BytesIO):
         path = os.path.join(
