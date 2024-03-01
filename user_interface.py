@@ -128,14 +128,20 @@ class LibraryExtension:
                     signal = spf.readframes(-1)
                     signal = np.frombuffer(signal, dtype=np.int16)
 
+                    framerate = spf.getframerate()
+
                     # Wenn Stereo
                     if spf.getnchannels() == 2:
                         st.write("Just mono files")
                         sys.exit(0)
 
+                    time = np.linspace(0, len(signal) / framerate, num=len(signal))
+
                     fig, ax = plt.subplots()  # Erstelle eine Matplotlib-Figur und Achse
-                    ax.plot(signal)  # Plotte das Audiosignal auf der Achse
+                    ax.plot(time, signal)  # Plotte das Audiosignal auf der Achse
                     plt.title("Signal Form")
+                    plt.xlabel('Zeit (s)')
+                    plt.ylabel('Amplitude')
                     st.pyplot(fig)
 
 
