@@ -1,8 +1,14 @@
 import os
+import sys
 from io import BytesIO
+import wave
 from urllib.parse import quote, quote_plus
 
 import streamlit as st
+
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 from recognise import Recogniser
 
@@ -116,6 +122,23 @@ class LibraryExtension:
 
                 audio_bytes = uploaded_file.getvalue()
                 st.audio(audio_bytes, format='audio/wav')
+
+                with wave.open(file_path, "rb") as spf:
+                    # Extrahiere das Raw-Audio aus der Wav-Datei
+                    signal = spf.readframes(-1)
+                    signal = np.frombuffer(signal, dtype=np.int16)
+
+                    # Wenn Stereo
+                    if spf.getnchannels() == 2:
+                        st.write("Just mono files")
+                        sys.exit(0)
+
+                    fig, ax = plt.subplots()  # Erstelle eine Matplotlib-Figur und Achse
+                    ax.plot(signal)  # Plotte das Audiosignal auf der Achse
+                    plt.title("Signal Form")
+                    st.pyplot(fig)
+
+
 
     def __save_fie(self, uploaded_file: BytesIO):
         path = os.path.join(
