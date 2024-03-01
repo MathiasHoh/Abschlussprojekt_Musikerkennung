@@ -48,10 +48,6 @@ class Fingerprint():
         peak. Calculates number of peaks to return based on how many peaks could theoretically
         fit in the spectrogram and the :data:`constants.POINT_EFFICIENCY`.
 
-        Inspired by
-        `photutils
-        <https://photutils.readthedocs.io/en/stable/_modules/photutils/detection/core.html#find_peaks>`_.
-
         :param Sxx: The spectrogram.
         :returns: A list of peaks in the spectrogram.
         """
@@ -103,8 +99,7 @@ class Fingerprint():
         return hash((p1[0], p2[0], p2[1]-p2[1]))
 
     def __target_zone(self, anchor: np_types.NDArray, points: np_types.NDArray, width: float, height: int, t: float) -> np_types.NDArray:
-        """Generates a target zone as described in `the Shazam paper
-        <https://www.ee.columbia.edu/~dpwe/papers/Wang03-shazam.pdf>`_.
+        """Generates a target zone.
 
         Given an anchor point, yields all points within a box that starts `t` seconds after the point,
         and has width `width` and height `height`.
