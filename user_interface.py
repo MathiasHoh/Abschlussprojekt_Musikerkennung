@@ -3,9 +3,8 @@ from io import BytesIO
 from urllib.parse import quote, quote_plus
 
 import streamlit as st
-from pydub import AudioSegment
 
-from recognise import Recogniser
+from recognise import Recogniser, PlayAudio
 
 recognised = list()
 
@@ -113,8 +112,10 @@ class LibraryExtension:
             if uploaded_file:
                 file_path = self.__save_fie(uploaded_file)
                 self.recogniser.register_song(file_path, interpret=interpret, album=album, title=title)
-                st.write(f"Datei {uploaded_file.name} erfolgreich hochgeladen.")
-    
+                st.write(f"Datei {uploaded_file.name} erfolgreich hochgeladen.")   
+
+                PlayAudio.play_audio(uploaded_song)
+
     def __save_fie(self, uploaded_file: BytesIO):
         path = os.path.join(
             self.song_dir,
