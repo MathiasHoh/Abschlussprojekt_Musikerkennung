@@ -80,7 +80,7 @@ class Recogniser():
         """
         def pool_init(l: Lock):
             """Init function that makes a lock available to each of the workers in
-            the pool. Allows synchronisation of db writes since SQLite only supports
+            the pool. Allows synchronisation of db writes since tinydb only supports
             one writer at a time.
             """
             global lock

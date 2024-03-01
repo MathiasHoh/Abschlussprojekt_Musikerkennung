@@ -38,8 +38,6 @@ class SongDatabase:
         
         if not hashes:
 
-            # Fehlerbehandlung hier einfügen
-
             return
         
 
