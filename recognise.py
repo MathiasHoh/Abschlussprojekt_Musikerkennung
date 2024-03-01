@@ -169,6 +169,13 @@ class Recogniser():
         return np.hstack(frames)
 
 
+class PlayAudio():
+    @classmethod
+    def play_audio(audio_file):
+        audio_bytes = audio_file.read()
+        return audio_bytes
+
+
 class Matcher():
 
     def __init__(self, binwidth: float=0.5):
