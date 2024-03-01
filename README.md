@@ -12,7 +12,7 @@ Das User Interface verfügt über verschiedene Reiter, welche auf der Linken Sei
 
 Wenn wir jetzt auf den Reiter links vom Hauptinterface gehen, kann man in verschiedene Reiter springen. Der zweite Reiter wurde mit "Meine erkannten Songs" benannt und gibt die Liste an Songs aus, welche der Benutzer der Oberfläche bereits erkennen lassen hat.
 
-Als Letztes gibt es noch den Reiter "Bibliothek erweitern". Hier kann man, wie auch im Reiter "Musikerkennung" mittels Drag-and-drop oder mittels "Browse files" Musikstücke einspielen welche dann in die Datenbank mit aufgenommen werden. Während man auf die Registrierung wartet werden von der App GIFs abgespielt, um die Wartezeit kürzer wirken zu lassen und das Interface aufzuwerten. Für den Fall, dass ein Musikstück ohne hinterlegte Infos (Songname, Künstler, Album) in den Metadaten eingespielt wird, kann man diese Informationen händisch eintippen. Für den Fall, dass diese Informationen nicht vom Programm erkannt werden und diese auch nicht händisch eingetippt werden, wird der Song zwar in die Datenbank mit aufgenommen, jedoch wird dieser dann als "Unknown" gespeichert.
+Als Letztes gibt es noch den Reiter "Bibliothek erweitern". Hier kann man, wie auch im Reiter "Musikerkennung" mittels Drag-and-drop oder mittels "Browse files" Musikstücke einspielen welche dann in die Datenbank mit aufgenommen werden. Für den Fall, dass ein Musikstück ohne hinterlegte Infos (Songname, Künstler, Album) in den Metadaten eingespielt wird, kann man diese Informationen händisch eintippen. Für den Fall, dass diese Informationen nicht vom Programm erkannt werden und diese auch nicht händisch eingetippt werden, wird der Song zwar in die Datenbank mit aufgenommen, jedoch wird dieser dann als "Unknown" gespeichert.
 
 # Wie funktioniert das Programm ?
 
@@ -33,7 +33,7 @@ Erweiterungen welche implementiert wurden sind:
 - Die Musikerkennung über das Mikrofon
 - Bei erkennung eines Songs die Möglichkeit diesen direkt über Spotify oder YouTube abzuspielen, dabei wird direkt der Titel sowie der Künstler in die Suchleiste der jeweiligen Platform übergeben und dieser so direkt gesucht. 
 - Es wurde ein Reiter "Erkannte Songs" erstellt welcher eine Liste der Songs wiedergibt, welche der Benutzer der Oberfläche bereits erkennen lassen hat.
-- GIFs werden abgespielt, während man auf die Song-regestrierung wartet und wenn ein Song nicht erkannt wurde.
+- GIFs werden abgespielt, während man auf die Song-Erkennung übers Mikrofon wartet und wenn ein Song nicht erkannt wurde.
 
 # UML
 
